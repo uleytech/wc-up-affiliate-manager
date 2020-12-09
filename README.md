@@ -1,2 +1,2 @@
-# wc-product-manager-api
-WooCommerce Product Manager API
+# wc-up-affiliate-manager
+WooCommerce UP Affiliate Manager
