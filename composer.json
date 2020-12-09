@@ -1,0 +1,16 @@
+{
+    "name": "wp-dmd/wc-up-affiliate-manager",
+    "description": "WooCommerce UP Affiliate Manager",
+    "type": "plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oleksandr Krokhin",
+            "email": "alexander@krohin.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.1",
+        "erusev/parsedown": "^1.7"
+    }
+}
