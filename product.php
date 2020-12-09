@@ -52,7 +52,7 @@ function upAffiliateManagerImportProducts()
             }
         }
 
-        $product = getProductBySku($group[0]['group_id']);
+        $product = upAffiliateManagerGetProductBySku($group[0]['group_id']);
         if ($product) {
             $skus = [];
             $attributes = setProductAttributes($group);
@@ -250,7 +250,7 @@ function upAffiliateManagerSanitizer(string $data): string
  * @param string $sku
  * @return WC_Product_Variable|null
  */
-function getProductBySku(string $sku): ?WC_Product_Variable
+function upAffiliateManagerGetProductBySku(string $sku): ?WC_Product_Variable
 {
     global $wpdb;
     $product_id = $wpdb->get_var(
