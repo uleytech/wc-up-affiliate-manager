@@ -6,9 +6,9 @@ function initUpAffiliateManager()
 {
     new UpAffiliateManagerGitLabUpdater(
         __FILE__,
-        PMA_USERNAME,
-        PMA_PROJECT,
-        PMA_TOKEN
+        UP_AFFILIATE_MANAGER_USERNAME,
+        UP_AFFILIATE_MANAGER_PROJECT,
+        UP_AFFILIATE_MANAGER_TOKEN
     );
 }
 

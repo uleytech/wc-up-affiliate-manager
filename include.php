@@ -1,7 +1,7 @@
 <?php
 define('UP_AFFILIATE_MANAGER_USERNAME', 'wp-dmd');
 define('UP_AFFILIATE_MANAGER_PROJECT', 'wc-up-affiliate-manager');
-define('UP_AFFILIATE_MANAGER_TOKEN', 'oJ9f9aUsuyZf8Az_usyR');
+define('UP_AFFILIATE_MANAGER_TOKEN', '6QVgZKWyxDhiHjwNwR8J');
 
 define('UP_AFFILIATE_MANAGER_TITLE', 'UP Affiliate Manager');
 define('UP_AFFILIATE_MANAGER_MENU', 'UP Aff Manager');
