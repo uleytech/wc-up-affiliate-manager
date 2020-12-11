@@ -16,9 +16,20 @@ add_action('init', 'upAffiliateManagerInitAffCookie');
 
 function upAffiliateManagerAddPapTracker()
 {
-    wp_enqueue_script('pap_x2s6df8d', '//transferto.zx.megadevs.xyz/scripts/trackjs.js', [], false, true);
-    wp_enqueue_script("jquery");
-    wp_enqueue_script('tracker', plugins_url('/assets/js/tracker.js', __FILE__), ['jquery', 'pap_x2s6df8d'], false, true);
+    wp_enqueue_script(
+        'pap_x2s6df8d',
+        '//transferto.zx.megadevs.xyz/scripts/trackjs.js',
+        [],
+        false,
+        true
+    );
+    wp_enqueue_script(
+        'tracker',
+        plugins_url('/assets/js/tracker.js', __FILE__),
+        ['js-cookie-js', 'pap_x2s6df8d'],
+        false,
+        true
+    );
 }
 
 add_action('wp_enqueue_scripts', 'upAffiliateManagerAddPapTracker');
