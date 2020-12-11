@@ -26,7 +26,7 @@ function upAffiliateManagerAddPapTracker()
     wp_enqueue_script(
         'tracker',
         plugins_url('/assets/js/tracker.js', __FILE__),
-        ['js-cookie-js', 'pap_x2s6df8d'],
+        ['pap_x2s6df8d', 'js-cookie'],
         false,
         true
     );
