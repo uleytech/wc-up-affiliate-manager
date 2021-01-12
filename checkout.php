@@ -148,7 +148,7 @@ function upAffiliateManagerCreateSaleOrder(WC_Order $order): ?WC_Order
     $mainData = [
         'telephone' => $order->get_billing_phone(),
         'email' => $order->get_billing_email(),
-        'lang' => 'en',
+        'lang' => determine_locale(),
         'ip_address' => $order->get_customer_ip_address(),
         'website' => $url,
         'sub_total' => $order->get_subtotal(),
