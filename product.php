@@ -168,6 +168,8 @@ function upAffiliateManagerImportProducts()
         }
     }
 
+    upAffiliateManagerUpdateOptions();
+
     return esc_html__('All products import successful', UP_AFFILIATE_MANAGER_PROJECT) . ', '
         . count($imported) . ' ' . esc_html__('imported') . ', '
         . count($updated) . ' ' . esc_html__('updated') . ', '
