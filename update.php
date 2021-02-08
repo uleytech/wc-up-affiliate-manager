@@ -76,8 +76,8 @@ function upAffiliateManagerUpdateOptions()
 {
     $options = get_option(UP_AFFILIATE_MANAGER_UPDATE_OPTIONS);
 
-    $options['price_updated_at'] = (new DateTime())->format('Y-m-d');
-    $options['stock_updated_at'] = (new DateTime())->format('Y-m-d');
+    $options['price_updated_at'] = (new DateTime())->format('Y-m-d H:i:s');
+    $options['stock_updated_at'] = (new DateTime())->format('Y-m-d H:i:s');
     $options['show_update'] = false;
 
     update_option(UP_AFFILIATE_MANAGER_UPDATE_OPTIONS, $options, true);
