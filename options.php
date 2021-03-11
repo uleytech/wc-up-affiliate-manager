@@ -170,6 +170,13 @@ function upAffiliateManagerSettingsRegister()
         UP_AFFILIATE_MANAGER_PAGE,
         'api_settings'
     );
+    add_settings_field(
+        'wc_up_affiliate_manager_setting_exclude_attributes',
+        esc_attr__('Exclude Attributes', UP_AFFILIATE_MANAGER_PROJECT),
+        'upAffiliateManagerSettingsRegisterExcludeAttributes',
+        UP_AFFILIATE_MANAGER_PAGE,
+        'api_settings'
+    );
 }
 
 add_action('admin_init', 'upAffiliateManagerSettingsRegister');
@@ -203,6 +210,10 @@ function upAffiliateManagerSettingsValidate($input)
     $newinput['checkout_type'] = trim($input['checkout_type']);
     if (!preg_match('/^[0-9]{1}$/i', $newinput['checkout_type'])) {
         $newinput['checkout_type'] = '';
+    }
+    $newinput['exclude_attributes'] = trim($input['exclude_attributes']);
+    if (!preg_match('/^[0-9a-z\,\ ]+$/i', $newinput['exclude_attributes'])) {
+        $newinput['exclude_attributes'] = '';
     }
     return $newinput;
 }
@@ -289,12 +300,19 @@ function upAffiliateManagerSettingsRegisterIncludeGroups()
 {
     $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
     echo "<input id = 'wc_up_affiliate_manager_setting_include_groups' name = 'wc_up_affiliate_manager_options[include_groups]' type = 'text' class='regular-text' value = '" . esc_attr($options['include_groups']) . "' />";
-    echo "<p class='description' > Comma separated SKU(1, 2, 3) </p > ";
+    echo "<p class='description' > Comma separated SKU (1, 2, 3) </p > ";
 }
 
 function upAffiliateManagerSettingsRegisterExcludeGroups()
 {
     $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
     echo "<input id = 'wc_up_affiliate_manager_setting_exclude_groups' name = 'wc_up_affiliate_manager_options[exclude_groups]' type = 'text' class='regular-text' value = '" . esc_attr($options['exclude_groups']) . "' />";
-    echo "<p class='description' > Comma separated SKU(1, 2, 3) </p > ";
+    echo "<p class='description' > Comma separated SKU (1, 2, 3) </p > ";
+}
+
+function upAffiliateManagerSettingsRegisterExcludeAttributes()
+{
+    $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
+    echo "<input id = 'wc_up_affiliate_manager_setting_exclude_attributes' name = 'wc_up_affiliate_manager_options[exclude_attributes]' type = 'text' class='regular-text' value = '" . esc_attr($options['exclude_attributes']) . "' />";
+    echo "<p class='description' > Comma separated Attribute (mgeu2eu, ...) </p > ";
 }

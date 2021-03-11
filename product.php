@@ -14,7 +14,10 @@ function upAffiliateManagerAction()
     }
 }
 
-function upAffiliateManagerImportProducts()
+/**
+ * @return string
+ */
+function upAffiliateManagerImportProducts(): string
 {
     $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
 
@@ -74,9 +77,9 @@ function upAffiliateManagerImportProducts()
                 }
             }
             $product->set_stock_status();
-            $product->set_category_ids(
-                getCategoryByName($group[0]['category_name'], $group[0]['category_seo_description'])
-            );
+//            $product->set_category_ids(
+//                getCategoryByName($group[0]['category_name'], $group[0]['category_seo_description'])
+//            );
             $imageId = $product->get_image_id();
             if (!$imageId) {
                 $imageId = upAffiliateManagerGetIdFromPictureUrl($group[0]['image']);
@@ -119,16 +122,6 @@ function upAffiliateManagerImportProducts()
                 return $exception->getMessage();
             }
 
-//            $dosages = [];
-//            $packages = [];
-//            foreach ($group as $item) {
-//                $dosages[upAffiliateManagerSanitizer($item['product_dosage_type'])][] = trim($item['product_dosage']);
-//                $packages[upAffiliateManagerSanitizer($item['product_package_type'])][] = trim($item['product_package']);
-//            }
-//            $attributes = array_merge(
-//                addProductAttributes($dosages),
-//                addProductAttributes($packages)
-//            );
             $attributes = setProductAttributes($group);
             $product->set_attributes($attributes);
             $productId = $product->save();
@@ -332,25 +325,44 @@ function getCategoryByName(string $name, string $description): array
 /**
  * @param WC_Product_Variable $product
  * @param array $data
- * @return int
+ * @return null|int
  * @throws WC_Data_Exception
  */
-function addProductVariation(WC_Product_Variable $product, array $data): int
+function addProductVariation(WC_Product_Variable $product, array $data): ?int
 {
+    $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
+    $attributes = [];
+    $excludeAttributes = [];
+    if (isset($options['exclude_attributes']) && $options['exclude_attributes'] !== '') {
+        $excludeAttributes = explode(',', $options['exclude_attributes']);
+    }
     $variation = new WC_Product_Variation();
+    $variation->set_regular_price($data['product_price']);
     try {
-        $variation->set_regular_price($data['product_price']);
         $variation->set_sku($data['product_id']);
-        $variation->set_parent_id($product->get_id());
-        $variation->set_attributes([
-            upAffiliateManagerSanitizer($data['product_dosage_type']) => trim($data['product_dosage']),
-            upAffiliateManagerSanitizer($data['product_package_type']) => trim($data['product_package']),
-        ]);
-        $variation->set_status('publish');
-        $variation->set_stock_status();
     } catch (WC_Data_Exception $exception) {
         throw $exception;
     }
+    $variation->set_parent_id($product->get_id());
+    $variation->set_status('publish');
+    $variation->set_stock_status();
+
+    $productDosageType = upAffiliateManagerSanitizer($data['product_dosage_type']);
+    if (in_array($productDosageType, $excludeAttributes)) {
+        return null;
+    }
+    $attributes[$productDosageType] = trim($data['product_dosage']);
+
+    $productPackageType = upAffiliateManagerSanitizer($data['product_package_type']);
+    if (in_array($productPackageType, $excludeAttributes)) {
+        return null;
+    }
+    $attributes[$productPackageType] = trim($data['product_package']);
+
+    if (count($attributes) > 0) {
+        $variation->set_attributes($attributes);
+    }
+
     return $variation->save();
 }
 
@@ -361,18 +373,27 @@ function addProductVariation(WC_Product_Variable $product, array $data): int
  */
 function updateProductVariation(WC_Product_Variation $productVariation, array $data): void
 {
+    $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
+    $attributes = [];
+    $excludeAttributes = [];
+    if (isset($options['exclude_attributes']) && $options['exclude_attributes'] !== '') {
+        $excludeAttributes = explode(',', $options['exclude_attributes']);
+    }
+
     $productVariation->set_stock_status();
+
     if ($productVariation->get_regular_price() !== $data['product_price']) {
         $productVariation->set_regular_price($data['product_price']);
     }
-    $attributes = [];
     $productDosage = $productVariation->get_attribute('product_dosage_type');
-    if ($productDosage !== $data['product_dosage']) {
-        $attributes[upAffiliateManagerSanitizer($data['product_dosage_type'])] = trim($data['product_dosage']);
+    $productDosageType = upAffiliateManagerSanitizer($data['product_dosage_type']);
+    if (!in_array($productDosageType, $excludeAttributes) && $productDosage !== $data['product_dosage']) {
+        $attributes[$productDosageType] = trim($data['product_dosage']);
     }
     $productPackage = $productVariation->get_attribute('product_package_type');
-    if ($productPackage !== $data['product_package']) {
-        $attributes[upAffiliateManagerSanitizer($data['product_package_type'])] = trim($data['product_package']);
+    $productPackageType = upAffiliateManagerSanitizer($data['product_package_type']);
+    if (!in_array($productPackageType, $excludeAttributes) && $productPackage !== $data['product_package']) {
+        $attributes[$productPackageType] = trim($data['product_package']);
     }
     if (count($attributes) > 0) {
         $productVariation->set_attributes($attributes);
@@ -407,11 +428,23 @@ function addProductAttributes(array $data): array
  */
 function setProductAttributes(array $group): array
 {
+    $options = get_option(UP_AFFILIATE_MANAGER_OPTIONS);
     $dosages = [];
     $packages = [];
+    $excludeAttributes = [];
+    if (isset($options['exclude_attributes']) && $options['exclude_attributes'] !== '') {
+        $excludeAttributes = explode(',', $options['exclude_attributes']);
+    }
+
     foreach ($group as $item) {
-        $dosages[upAffiliateManagerSanitizer($item['product_dosage_type'])][] = trim($item['product_dosage']);
-        $packages[upAffiliateManagerSanitizer($item['product_package_type'])][] = trim($item['product_package']);
+        $productDosageType = upAffiliateManagerSanitizer($item['product_dosage_type']);
+        if (!in_array($productDosageType, $excludeAttributes)) {
+            $dosages[$productDosageType][] = trim($item['product_dosage']);
+        }
+        $productPackageType = upAffiliateManagerSanitizer($item['product_package_type']);
+        if (!in_array($productPackageType, $excludeAttributes)) {
+            $packages[$productPackageType][] = trim($item['product_package']);
+        }
     }
     return array_merge(
         addProductAttributes($dosages),
