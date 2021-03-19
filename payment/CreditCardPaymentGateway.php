@@ -120,7 +120,7 @@ class CreditCardPaymentGateway extends WC_Payment_Gateway
 //        echo $this->credit_card_form();
         echo '
         <div class="form-row validate-required form-row-wide">
-            <label for="sca_card_number">Card Number 
+            <label for="sca_card_number">' . esc_html__('Card Number ', 'woocommerce') . '
                 <abbr class="required" title="required">*</abbr>
             </label>
             <span class="woocommerce-input-wrapper">
@@ -130,7 +130,7 @@ class CreditCardPaymentGateway extends WC_Payment_Gateway
 		    </span>
 		</div>
 		<div class="form-row validate-required form-row-first">
-			<label for="sca_expdate">Expiry Date 
+			<label for="sca_expdate">' . esc_html__('Expiry date', 'woocommerce') . ' 
 			    <abbr class="required" title="required">*</abbr>    
 			</label>
 			<span class="woocommerce-input-wrapper">
@@ -140,7 +140,7 @@ class CreditCardPaymentGateway extends WC_Payment_Gateway
 			</span>
 		</div>
 		<div class="form-row validate-required form-row-last">
-			<label for="sca_cvv">Code (CVC)
+			<label for="sca_cvv">' . esc_html__('Code (CVC)', 'woocommerce') . '
 			    <abbr class="required" title="required">*</abbr>    
 			</label>
 			<span class="woocommerce-input-wrapper">
