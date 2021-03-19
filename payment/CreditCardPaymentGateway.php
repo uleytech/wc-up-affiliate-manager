@@ -120,7 +120,7 @@ class CreditCardPaymentGateway extends WC_Payment_Gateway
 //        echo $this->credit_card_form();
         echo '
         <div class="form-row validate-required form-row-wide">
-            <label for="sca_card_number">' . esc_html__('Card Number ', 'woocommerce') . '
+            <label for="sca_card_number">' . esc_html__('Card number', 'woocommerce') . '
                 <abbr class="required" title="required">*</abbr>
             </label>
             <span class="woocommerce-input-wrapper">
